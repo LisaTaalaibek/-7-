@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ky">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Планеталар Презентациясы</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        header {
+            text-align: center;
+            padding: 2rem 1rem 1rem 1rem;
+            position: relative;
+        }
+        header h1 {
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+            animation: fadeInDown 1s;
+        }
+        header p {
+            font-size: 1.2rem;
+            color: #b0c4de;
+            animation: fadeInDown 1.5s;
+        }
+        .star-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .planets-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0 4rem 0;
+            position: relative;
+            z-index: 1;
+        }
+        .planet-card {
+            background: rgba(30,40,60,0.85);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.37);
+            width: 320px;
+            padding: 1.5rem 1rem 1rem 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: fadeInUp 1s;
+            cursor: pointer;
+        }
+        .planet-card:hover {
+            transform: translateY(-10px) scale(1.04) rotate(-1deg);
+            box-shadow: 0 16px 40px 0 rgba(31,38,135,0.47);
+            background: rgba(50,60,90,0.95);
+        }
+        .planet-anim {
+            margin: 0 auto 1rem auto;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            position: relative;
+            animation: spin 8s linear infinite;
+            box-shadow: 0 0 40px 10px rgba(255,255,255,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Planet colors */
+        .mercury { background: linear-gradient(135deg, #b1b1b1 60%, #757575 100%);}
+        .venus   { background: linear-gradient(135deg, #e6c07b 60%, #b8860b 100%);}
+        .earth   { background: linear-gradient(135deg, #3a9bdc 60%, #1e5a99 100%);}
+        .mars    { background: linear-gradient(135deg, #c1440e 60%, #a52a2a 100%);}
+        .jupiter { background: linear-gradient(135deg, #e3c07b 60%, #b97a56 100%);}
+        .saturn  { background: linear-gradient(135deg, #f7e7b6 60%, #c2b280 100%);}
+        .uranus  { background: linear-gradient(135deg, #b0e0e6 60%, #48d1cc 100%);}
+        .neptune { background: linear-gradient(135deg, #4166f5 60%, #191970 100%);}
+        .pluto   { background: linear-gradient(135deg, #d3d3d3 60%, #a9a9a9 100%);}
+        /* Saturn ring */
+        .saturn::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 120px;
+            height: 20px;
+            background: rgba(255,255,200,0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            z-index: 0;
+        }
+        /* Earth clouds */
+        .earth::after {
+            content: "";
+            position: absolute;
+            left: 15px; top: 20px;
+            width: 50px; height: 15px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 50%;
+            filter: blur(1px);
+            animation: cloudMove 5s linear infinite;
+        }
+        @keyframes cloudMove {
+            0% { left: 15px; opacity: 0.7;}
+            50% { left: 40px; opacity: 1;}
+            100% { left: 15px; opacity: 0.7;}
+        }
+        /* Jupiter's red spot */
+        .jupiter::after {
+            content: "";
+            position: absolute;
+            right: 18px; bottom: 18px;
+            width: 18px; height: 10px;
+            background: #c1440e;
+            border-radius: 50%;
+            opacity: 0.7;
+            box-shadow: 0 0 8px 2px #c1440e55;
+            animation: spotMove 6s linear infinite;
+        }
+        @keyframes spotMove {
+            0% { right: 18px;}
+            50% { right: 35px;}
+            100% { right: 18px;}
+        }
+        /* Uranus rings */
+        .uranus::before {
+            content: "";
+            position: absolute;
+            left: 50%; top: 50%;
+            width: 90px; height: 18px;
+            background: rgba(200,255,255,0.18);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) rotate(25deg);
+            z-index: 0;
+        }
+        /* Neptune storm */
+        .neptune::after {
+            content: "";
+            position: absolute;
+            left: 55px; top: 55px;
+            width: 15px; height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            opacity: 0.18;
+            animation: stormMove 4s linear infinite;
+        }
+        @keyframes stormMove {
+            0% { left: 55px;}
+            50% { left: 25px;}
+            100% { left: 55px;}
+        }
+        /* Animations */
+        @keyframes spin {
+            0% { transform: rotate(0deg);}
+            100% { transform: rotate(360deg);}
+        }
+        @keyframes fadeInDown {
+            0% { opacity: 0; transform: translateY(-40px);}
+            100% { opacity: 1; transform: translateY(0);}
+        }
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(40px);}
+            100% { opacity: 1; transform: translateY(0);}
+        }
+        .planet-card h2 {
+            margin: 0.5rem 0 0.3rem 0;
+            font-size: 1.4rem;
+            letter-spacing: 1px;
+        }
+        .planet-card p {
+            font-size: 1rem;
+            color: #c9d1d9;
+        }
+        .planet-card .fact {
+            margin-top: 0.7rem;
+            font-size: 0.98rem;
+            color: #ffe082;
+            opacity: 0;
+            transition: opacity 0.5s;
+            min-height: 1.2em;
+        }
+        .planet-card.show-fact .fact {
+            opacity: 1;
+        }
+        footer {
+            text-align: center;
+            color: #b0c4de;
+            padding: 1.5rem 0 0.5rem 0;
+            font-size: 1rem;
+            letter-spacing: 1px;
+        }
+        @media (max-width: 900px) {
+            .planets-container { gap: 1rem;}
+            .planet-card { width: 90vw; max-width: 350px;}
+        }
+    </style>
+</head>
+<body>
+    <canvas class="star-bg"></canvas>
+    <header>
+        <h1>Күн системасынын планеталары</h1>
+        <p>Ар бир планета тууралуу кеңири маалымат жана анимация. Планетаны бассаңыз, кызыктуу факт чыгат!</p>
+    </header>
+    <section class="planets-container">
+        <div class="planet-card" data-fact="Меркурийде бир күн Жердеги 176 күнгө барабар.">
+            <div class="planet-anim mercury"></div>
+            <h2>Меркурий</h2>
+            <p>
+                Меркурий — Күнгө эң жакын жана эң кичине планета. Анын атмосферасы дээрлик жок болгондуктан, күндүзү температура +430°Cге чейин жетет, ал эми түнкүсүн -180°Cге чейин төмөндөйт. Меркурийде суу жок, бетинде көптөгөн кратерлер бар. Анын айлануу ылдамдыгы өтө жогору.
+            </p>
+            <div class="fact"></div>
+        </div>
+        <div class="planet-card" data-fact="Венерада күн чыгыш батыштан чыгат!">
+            <div class="planet-anim venus"></div>
+            <h2>Венера</h2>
+            <p>
+                Венера — Күн системасындагы эң ысык планета. Атмосферасы өтө коюу жана уулуу, негизинен көмүр кычкыл газынан турат. Венеранын бетинде парник эффектиси күчтүү, ошондуктан температура +470°Cге чейин жетет. Анын бети булут менен капталган жана жер бетинде жашоо мүмкүн эмес.
+            </p>
+            <div class="fact"></div>
+        </div>
+        <div class="planet-card" data-fact="Жерде жалгыз табигый спутник — Ай.">
+            <div class="planet-anim earth"></div>
+            <h2>Жер</h2>
+            <p>
+                Жер — Күн системасында жашоо бар жалгыз планета. Анын атмосферасы азот жана кычкылтектен турат. Жерде суу, аба, өсүмдүктөр жана жаныбарлар бар. Жердин бир гана табигый спутниги — Ай. Жерде төрт мезгил болот.
+            </p>
+            <div class="fact"></div>
+        </div>
+        <div class="planet-card" data-fact="Марста эң чоң вулкан — Олимп тоосу бар.">
+            <div class="planet-anim mars"></div>
+            <h2>Марс</h2>
+            <p>
+                Марс — Кызыл планета деп аталат. Анын бети темир оксидинен улам кызыл түстө. Марста эң чоң вулкан — Олимп тоосу жана эң чоң каньон — Маринер өрөөнү бар. Болочокто адамдар Марска конууга аракет кылууда. Марста да кыш жана жай болот.
+            </p>
+            <div class="fact"></div>
+        </div>
+        <div class="planet-card" data-fact="Юпитерде чоң кызыл так — бул чоң бороон.">
+            <div class="planet-anim jupiter"></div>
+            <h2>Юпитер</h2>
+            <p>
+                Юпитер — Күн системасындагы эң чоң планета. Ал негизинен суутек жана гелийден турат. Юпитерде чоң кызыл так деп аталган чоң бороон бар. Анын 80ден ашык спутниги бар, эң белгилүүсү — Ганимед. Юпитерде шакектер да бар.
+            </p>
+            <div class="fact"></div>
+        </div>
+        <div class="planet-card" data-fact="Сатурн шакектери 90% муздан турат.">
+            <div class="planet-anim saturn"></div>
+            <h2>Сатурн</h2>
+            <p>
+                Сатурн — шакектери менен белгилүү газ гиганты. Анын шакектери негизинен муз жана таштардан турат. Сатурндун 80ден ашык спутниги бар, эң чоңу — Титан. Сатурн Күн системасындагы эң жеңил планета жана шакектери эң чоң.
+            </p>
+            <div class="fact"></div>
+        </div>
+        <div class="planet-card" data-fact="Уран өз огунда капталынан айланат.">
+            <div class="planet-anim uranus"></div>
+            <h2>Уран</h2>
+            <p>
+                Уран — көк-жашыл түстөгү планета. Анын өзгөчөлүгү — өз огунда капталынан айланат. Урандын атмосферасында метан газынан улам көк түстө көрүнөт. Анын да шакектери жана 27 спутниги бар. Уран эң суук планета.
+            </p>
+            <div class="fact"></div>
+        </div>
+        <div class="planet-card" data-fact="Нептунда шамалдын ылдамдыгы 2100 км/саатка жетет.">
+            <div class="planet-anim neptune"></div>
+            <h2>Нептун</h2>
+            <p>
+                Нептун — Күн системасындагы эң алыскы чоң планета. Анын атмосферасында катуу шамалдар болуп турат, шамалдын ылдамдыгы 2100 км/саатка жетет. Нептундун түсү метан газынан улам көк. Анын эң чоң спутниги — Тритон.
+            </p>
+            <div class="fact"></div>
+        </div>
+        <div class="planet-card" data-fact="Плутон азыр карлик планета деп эсептелет.">
+            <div class="planet-anim pluto"></div>
+            <h2>Плутон</h2>
+            <p>
+                Плутон — мурда планета деп эсептелген, азыр карлик планета. Ал Күнгө эң алыс жайгашкан жана негизинен муз жана таштан турат. Плутондун эң чоң спутниги — Харон. Плутондун орбитасы эллипс формасында.
+            </p>
+            <div class="fact"></div>
+        </div>
+    </section>
+    <script>
+        // Жылдыздардын анимациясы
+        const canvas = document.querySelector('.star-bg');
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        function createStars() {
+            stars = [];
+            for (let i = 0; i < 120; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    r: Math.random() * 1.2 + 0.3,
+                    o: Math.random() * 0.5 + 0.5,
+                    s: Math.random() * 0.5 + 0.2
+                });
+            }
+        }
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let star of stars) {
+                ctx.globalAlpha = star.o;
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.r, 0, 2 * Math.PI);
+                ctx.fillStyle = "#fff";
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = "#fff";
+                ctx.fill();
+                ctx.globalAlpha = 1;
+                star.x += star.s * 0.1;
+                if (star.x > canvas.width) star.x = 0;
+            }
+            requestAnimationFrame(drawStars);
+        }
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            createStars();
+        });
+        resizeCanvas();
+        createStars();
+        drawStars();
+
+        // Планета картасын басканда факт чыгат
+        document.querySelectorAll('.planet-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Фактты көрсөтүү/жашыруу
+                if (this.classList.contains('show-fact')) {
+                    this.classList.remove('show-fact');
+                    this.querySelector('.fact').textContent = '';
+                } else {
+                    document.querySelectorAll('.planet-card').forEach(c => {
+                        c.classList.remove('show-fact');
+                        c.querySelector('.fact').textContent = '';
+                    });
+                    this.classList.add('show-fact');
+                    this.querySelector('.fact').textContent = this.getAttribute('data-fact');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
